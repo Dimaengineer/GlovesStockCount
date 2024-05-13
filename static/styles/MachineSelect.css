@@ -1,0 +1,64 @@
+* {
+    margin:0;
+    font-family: Arial;
+}
+
+.TitleBox{
+    margin-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.Title{
+    font-size: 35px;
+    font-weight: bold;
+    color: #375f9b;
+    display:inline-block;
+}
+
+.Back {
+    text-decoration: none;
+}
+
+.BackButton{
+    width:50px;
+    height: 50px;
+    background-color: #d3dae2;
+    color: #375f9b;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:none;
+    cursor: pointer;
+}
+  
+.BackButton:hover {
+    background-color: #bccbdb;
+}
+
+.Machines{
+    margin-top: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+.Machine{
+    font-size: 18px;
+    color: #375f9b;
+    width:90px;
+    height: 90px;
+    border-radius: 100px;
+    border: 3px solid #bccbdb;
+    background-color: #d3dae2;
+    border: none;
+    cursor: pointer;
+}
+  
+.Worker:hover {
+    background-color: #bccbdb;
+}

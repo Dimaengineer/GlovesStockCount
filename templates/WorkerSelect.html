@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/WorkerSelect.css') }}">
+    <title>Worker Selection</title>
+</head>
+<body>
+    <form method="post">
+        <p class="Title">Вибір працівника (ПІ)</p>
+        <div class="Workers">
+            {% for Worker in Workers %}
+            <input type="submit" name="Worker" class="Worker" value="{{Worker}}">
+            {% endfor %}
+        </div>
+    </form>
+</body>
+</html>
