@@ -8,7 +8,8 @@ UsersInfo = {}
 
 def OpenDB():
     global DBConnector, DBCursor
-    DBConnector = psycopg2.connect(user='GlovesStock_owner', password='9Z5esOASaQRU', host='ep-fancy-river-a2a7k2u7.eu-central-1.aws.neon.tech', database='GlovesStock', port=5432)
+    #DBConnector = psycopg2.connect(user='GlovesStock_owner', password='9Z5esOASaQRU', host='ep-fancy-river-a2a7k2u7.eu-central-1.aws.neon.tech', database='GlovesStock', port=5432)
+    DBConnector = psycopg2.connect(user='koyeb-adm', password='cpV2yNGvr8MY', host='ep-rapid-bush-a28cet29.eu-central-1.pg.koyeb.app', database='koyebdb')
     DBCursor = DBConnector.cursor()
 
 def CloseDB():
