@@ -228,6 +228,8 @@ def WorkerSelect(UserId):
             if UsersInfo[UserId]['Product'] != None:
                 UsersInfo[UserId]['Product'] = UsersInfo[UserId]['Product'][0]
                 return redirect(f'/{UserId}/shift')
+            else:
+                return redirect(f'/{UserId}/')
     else:
         UsersInfo[UserId]={}
         DBCursor.execute("SELECT Name FROM workers WHERE Exist=True")
