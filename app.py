@@ -4,12 +4,19 @@ import psycopg2
 
 app = Flask(__name__)
 
-# Database connection
-DBConnector = psycopg2.connect(user='GlovesStock_owner', password='9Z5esOASaQRU', host='ep-fancy-river-a2a7k2u7.eu-central-1.aws.neon.tech', database='GlovesStock', port=5432)
-DBCursor = DBConnector.cursor()
 UsersInfo = {}
+
+def OpenDB():
+    global DBConnector, DBCursor
+    DBConnector = psycopg2.connect(user='GlovesStock_owner', password='9Z5esOASaQRU', host='ep-fancy-river-a2a7k2u7.eu-central-1.aws.neon.tech', database='GlovesStock', port=5432)
+    DBCursor = DBConnector.cursor()
+
+def CloseDB():
+    DBCursor.close()
+    DBConnector.close()
 def SaveInfoToDB(UserId, Sort, GloveCount):
     global UsersInfo
+    OpenDB()
     if '1' in Sort:
         UsersInfo[UserId]['FirstSortGloveCount']+=int(GloveCount)
         if UsersInfo[UserId]['FirstSortGloveCount']-int(GloveCount)==0:
@@ -184,6 +191,7 @@ def SaveInfoToDB(UserId, Sort, GloveCount):
 
 
     DBConnector.commit()
+    CloseDB()
 
 
 
@@ -195,11 +203,13 @@ def StartApp():
 @app.route('/<int:UserId>/', methods=['GET', 'POST'])
 def WorkerSelect(UserId):
     global UsersInfo, AvailableStages
+    OpenDB()
     if request.method == "POST":
         Worker=request.form['Worker']
         UsersInfo[UserId]['Worker'] = Worker
         DBCursor.execute(f"SELECT Stage FROM workers WHERE Name='{UsersInfo[UserId]['Worker']}'")
         AvailableStages=[Stage[0] for Stage in DBCursor.fetchall()]
+        CloseDB()
         if len(AvailableStages)>1:
             return redirect(f'/{UserId}/stage_select')
         elif AvailableStages[0] in ["В'язання", "Оверлок"]:
@@ -207,8 +217,10 @@ def WorkerSelect(UserId):
             return redirect(f'/{UserId}/machine_select')
         else:
             UsersInfo[UserId]['Stage'] = AvailableStages[0]
+            OpenDB()
             DBCursor.execute(f"""SELECT Product FROM plans WHERE STAGE='{UsersInfo[UserId]['Stage'].replace("'", "''")}' AND Exist=True""")
             UsersInfo[UserId]['Product'] = DBCursor.fetchone()
+            CloseDB()
             UsersInfo[UserId]['FirstSortGloveCount']=0
             UsersInfo[UserId]['SecondSortGloveCount']=0
             UsersInfo[UserId]['DefectSortGloveCount']=0
@@ -220,7 +232,9 @@ def WorkerSelect(UserId):
         UsersInfo[UserId]={}
         DBCursor.execute("SELECT Name FROM workers WHERE Exist=True")
         Workers = list(set([row[0] for row in DBCursor.fetchall()]))
+        CloseDB()
         return render_template('WorkerSelect.html', Workers=Workers)
+    
 
 @app.route('/<int:UserId>/stage_select', methods=['GET', 'POST'])
 def StageSelect(UserId):
@@ -231,8 +245,10 @@ def StageSelect(UserId):
         if Stage in ["В'язання", "Оверлок"]:
             return redirect(f'/{UserId}/machine_select')
         else:
+            OpenDB()
             DBCursor.execute(f"""SELECT Product FROM plans WHERE STAGE='{UsersInfo[UserId]['Stage'].replace("'", "''")}' AND Exist=True""")
             UsersInfo[UserId]['Product'] = DBCursor.fetchone()
+            CloseDB()
             UsersInfo[UserId]['FirstSortGloveCount']=0
             UsersInfo[UserId]['SecondSortGloveCount']=0
             UsersInfo[UserId]['DefectSortGloveCount']=0
@@ -256,15 +272,18 @@ def MachineSelect(UserId):
         UsersInfo[UserId]['SecondSortGloveCount']=0
         UsersInfo[UserId]['DefectSortGloveCount']=0
         UsersInfo[UserId]['ShiftStart']=datetime.now().strftime("%d.%m.%Y %H:%M")
-
+        OpenDB()
         DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{UsersInfo[UserId]['Machine']}' AND STAGE='{UsersInfo[UserId]['Stage'].replace("'", "''")}' AND Exist=True""")
         UsersInfo[UserId]['Product'] = DBCursor.fetchone()[0]
+        CloseDB()
 
         return redirect(f'/{UserId}/shift')
     else:
+        OpenDB()
         DBCursor.execute(f"""SELECT Machine FROM plans WHERE Stage='{UsersInfo[UserId]['Stage'].replace("'", "''")}'""")
 
         Machines=sorted(list(set([Machine[0] for Machine in DBCursor.fetchall()])))
+        CloseDB()
 
         return render_template('MachineSelect.html', Machines=Machines, BackUrl=f'/{UserId}/stage_select' if len(AvailableStages)>1 else f'/{UserId}/')
 
