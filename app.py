@@ -28,14 +28,14 @@ def SaveInfoToDB(WorkerId, Sort, GloveCount, Machine, Product):
     DBCursor.execute(f"SELECT MAX(Id) FROM workers_gloves_quantity")
     Id=DBCursor.fetchone()[0]
     Id=Id+1 if Id != None else 0
-    DBCursor.execute(f"""INSERT INTO workers_gloves_quantity VALUES ({Id}, {WorkerId}, '{Product}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
+    DBCursor.execute(f"""INSERT INTO workers_gloves_quantity VALUES ({Id}, {WorkerId}, '{Machine}', '{Product}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
 
     DBCursor.execute(f"SELECT MAX(Id) FROM products_gloves_quantity")
     Id=DBCursor.fetchone()[0]
     Id=Id+1 if Id != None else 0
     DBCursor.execute(f"SELECT Id FROM products WHERE FullName='{Product}'")
     ProductId=DBCursor.fetchone()[0]
-    DBCursor.execute(f"""INSERT INTO products_gloves_quantity VALUES ({Id}, {ProductId}, '{UsersFlows[WorkerId]['Stage'].replace("'", "''")}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
+    DBCursor.execute(f"""INSERT INTO products_gloves_quantity VALUES ({Id}, {ProductId}, '{UsersFlows[WorkerId]['Stage'].replace("'", "''")}', '{Machine}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
 
     DBConnector.commit()
     CloseDB()
@@ -62,30 +62,6 @@ def WorkerSelect():
                 UsersFlows[WorkerId]['Stage'] = AvailableStages[0]
 
             return redirect(f'/{WorkerId}/worker_log_in')
-            # OpenDB()
-            # DBCursor.execute(f"""SELECT Product FROM plans WHERE STAGE='{UsersInfo[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
-            # UsersFlows[WorkerId]['Product'] = DBCursor.fetchone()
-            # CloseDB()
-            # UsersInfo[WorkerId]['ShiftStart']=datetime.now().strftime("%d.%m.%Y %H:%M")
-            # if UsersInfo[WorkerId]['Product'] != None:
-            #     UsersInfo[WorkerId]['Product'] = UsersInfo[WorkerId]['Product'][0]
-            #     return redirect(f'/{WorkerId}/shift')
-            # else:
-            #     return redirect(f'/{WorkerId}/')
-                
-        
-        
-        # CloseDB()
-        # if WorkerId not in UsersFlows:
-        #     UsersFlows[WorkerId]={}
-        #     UsersFlows[WorkerId]['Worker'] = Worker
-        #     return redirect(f'/{WorkerId}/worker_log_in')
-        # else:
-        #     OpenDB()
-        #     DBCursor.execute("SELECT Name FROM workers WHERE Exist=True")
-        #     Workers = list(set([row[0] for row in DBCursor.fetchall()]))
-        #     CloseDB()
-        #     return render_template('WorkerSelect.html', Workers=Workers, WorkerFlow='true')
             
     else:
         OpenDB()
