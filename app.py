@@ -28,7 +28,7 @@ def SaveInfoToDB(WorkerId, Sort, GloveCount, Machine, Product):
     DBCursor.execute(f"SELECT MAX(Id) FROM workers_gloves_quantity")
     Id=DBCursor.fetchone()[0]
     Id=Id+1 if Id != None else 0
-    DBCursor.execute(f"""INSERT INTO workers_gloves_quantity VALUES ({Id}, {WorkerId}, '{Product}', '{UsersFlows[WorkerId]['Stage'].replace("'", "''")}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
+    DBCursor.execute(f"""INSERT INTO workers_gloves_quantity VALUES ({Id}, {WorkerId}, '{Product}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
 
     DBCursor.execute(f"SELECT MAX(Id) FROM products_gloves_quantity")
     Id=DBCursor.fetchone()[0]
@@ -36,11 +36,6 @@ def SaveInfoToDB(WorkerId, Sort, GloveCount, Machine, Product):
     DBCursor.execute(f"SELECT Id FROM products WHERE FullName='{Product}'")
     ProductId=DBCursor.fetchone()[0]
     DBCursor.execute(f"""INSERT INTO products_gloves_quantity VALUES ({Id}, {ProductId}, '{UsersFlows[WorkerId]['Stage'].replace("'", "''")}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
-
-    DBCursor.execute(f"SELECT MAX(Id) FROM machines_gloves_quantity")
-    Id=DBCursor.fetchone()[0]
-    Id=Id+1 if Id != None else 0
-    DBCursor.execute(f"""INSERT INTO machines_gloves_quantity VALUES ({Id}, {Machine}, '{UsersFlows[WorkerId]['Stage'].replace("'", "''")}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
 
     DBConnector.commit()
     CloseDB()
