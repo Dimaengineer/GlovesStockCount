@@ -1,0 +1,62 @@
+* {
+    margin:0;
+    font-family: Arial;
+}
+
+.Title{
+    font-size: 35px;
+    font-weight: bold;
+    color: #375f9b;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.TimerContainer{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.Timer{
+    border: 1px solid gray;
+    border-radius: 10px;
+    color: #375f9b;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.SubmitGlovesCount{
+    font-size: 14px;
+    color: #375f9b;
+    padding: 13px 45px;
+    border-radius: 45px;
+    background-color: #d3dae2;
+    border: none;
+    cursor: pointer;
+}
+  
+.SubmitGlovesCount:hover {
+    background-color: #bccbdb;
+}
+
+.StopShiftContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.StopShift{
+    margin-top: 30px;
+    font-size: 14px;
+    color: #375f9b;
+    padding: 15px 40px;
+    border-radius: 45px;
+    background-color: #d3dae2;
+    border: none;
+    cursor: pointer;
+}
+  
+.StopShift:hover {
+    background-color: #bccbdb;
+}
