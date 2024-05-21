@@ -116,7 +116,7 @@ def Shift(WorkerId):
     if request.method == 'POST':
         if WorkerId in UsersFlows:
             OpenDB()
-            Minutes = (datetime.now().strftime("%d.%m.%Y %H:%M")-datetime.strptime(UsersFlows[WorkerId]['ShiftStart'], "%d.%m.%Y %H:%M")).total_seconds() / 60
+            Minutes = (datetime.now()-datetime.strptime(UsersFlows[WorkerId]['ShiftStart'], "%d.%m.%Y %H:%M")).total_seconds() / 60
             Hours = int(Minutes // 60)
             Minutes = int(Minutes % 60)
             ShiftsTime=f'{Hours} {'годин' if Hours!=1 else 'година'} {Minutes} {'хвилин' if Minutes!=1 else 'хвилина'}'
