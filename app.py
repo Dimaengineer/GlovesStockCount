@@ -134,7 +134,7 @@ def MachineSelect(WorkerId):
         return redirect(f'/{WorkerId}/add_gloves/{Machine}')
     else:
         OpenDB()
-        DBCursor.execute(f"""SELECT Machine FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}'""")
+        DBCursor.execute(f"""SELECT Machine FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=1""")
 
         Machines=sorted(list(set([Machine[0] for Machine in DBCursor.fetchall()])))
         CloseDB()
@@ -184,9 +184,13 @@ def AddGloves(WorkerId, Machine):
         else:
             OpenDB()
             DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
-            Product = DBCursor.fetchone()[0]
-            DBCursor.execute(f"""SELECT ShortName FROM products WHERE FullName='{Product}'""")
-            Product = DBCursor.fetchone()[0]
+            Product = DBCursor.fetchone()
+            if Product == None: 
+                return redirect(f'/{WorkerId}/shift')
+            else: 
+                Product = Product[0]
+                DBCursor.execute(f"""SELECT ShortName FROM products WHERE FullName='{Product}'""")
+                Product = DBCursor.fetchone()[0]
             CloseDB()
             ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}, {Machine} машина, {Product})"
 
