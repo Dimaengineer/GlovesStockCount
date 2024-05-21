@@ -25,6 +25,7 @@ def SaveInfoToDB(WorkerId, Sort, GloveCount, Machine, Product):
     elif '3' in Sort:
         UsersFlows[WorkerId]['GlovesCount'][Machine]['DefectSort']+=int(GloveCount)
 
+
     DBCursor.execute(f"SELECT MAX(Id) FROM workers_gloves_quantity")
     Id=DBCursor.fetchone()[0]
     Id=Id+1 if Id != None else 0
@@ -57,6 +58,7 @@ def WorkerSelect():
             DBCursor.execute(f"""SELECT Id FROM workers WHERE Name='{Worker}' AND Stage='{AvailableStages[0].replace("'", "''")}'""")
             WorkerId=DBCursor.fetchone()[0]
             CloseDB()
+            
             if WorkerId not in UsersFlows or 'ShiftStart' not in UsersFlows[WorkerId]:
                 UsersFlows[WorkerId]={'Worker':Worker}
                 UsersFlows[WorkerId]['Stage'] = AvailableStages[0]
@@ -114,10 +116,15 @@ def Shift(WorkerId):
     if request.method == 'POST':
         if WorkerId in UsersFlows:
             OpenDB()
+            Minutes = (datetime.now().strftime("%d.%m.%Y %H:%M")-datetime.strptime(UsersFlows[WorkerId]['ShiftStart'], "%d.%m.%Y %H:%M")).total_seconds() / 60
+            Hours = int(Minutes // 60)
+            Minutes = int(Minutes % 60)
+            ShiftsTime=f'{Hours} {'годин' if Hours!=1 else 'година'} {Minutes} {'хвилин' if Minutes!=1 else 'хвилина'}'
+
             DBCursor.execute(f"SELECT MAX(Id) FROM workers_shifts")
             Id=DBCursor.fetchone()[0]
             Id=Id+1 if Id != None else 0
-            DBCursor.execute(f"""INSERT INTO workers_shifts VALUES ({Id}, {WorkerId}, '{UsersFlows[WorkerId]['ShiftStart']}', '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
+            DBCursor.execute(f"""INSERT INTO workers_shifts VALUES ({Id}, {WorkerId}, '{UsersFlows[WorkerId]['ShiftStart']}', '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}', '{ShiftsTime}')""")
             DBConnector.commit()
             CloseDB()
         return redirect(f'/')
