@@ -29,7 +29,7 @@ def SaveInfoToDB(WorkerId, Sort, GloveCount, Machine, Product):
     DBCursor.execute(f"SELECT MAX(Id) FROM workers_gloves_quantity")
     Id=DBCursor.fetchone()[0]
     Id=Id+1 if Id != None else 0
-    DBCursor.execute(f"""INSERT INTO workers_gloves_quantity VALUES ({Id}, {WorkerId}, '{Machine}', '{Product}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
+    DBCursor.execute(f"""INSERT INTO workers_gloves_quantity VALUES ({Id}, {WorkerId}, '{Machine}', '{UsersFlows[WorkerId]['Stage'].replace("'", "''")}', '{Product}', {Sort}, {int(GloveCount)/2}, '{str(datetime.now().strftime("%d.%m.%Y %H:%M"))}')""")
 
     DBCursor.execute(f"SELECT MAX(Id) FROM products_gloves_quantity")
     Id=DBCursor.fetchone()[0]
