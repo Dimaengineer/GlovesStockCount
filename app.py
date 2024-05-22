@@ -130,7 +130,7 @@ def Shift(WorkerId):
             CloseDB()
         return redirect(f'/')
     else:
-        return render_template('Shift.html', ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']})", ShiftStart=UsersFlows[WorkerId]['ShiftStart'], AddGlovesUrl=f'/{WorkerId}/machine_select' if UsersFlows[WorkerId]['Stage'] in ["В'язання", 'Оверлок'] else f'/{WorkerId}/add_gloves/0')
+        return render_template('Shift.html', ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']})", ShiftStart=UsersFlows[WorkerId]['ShiftStart'], AddGlovesUrl=f'/{WorkerId}/machine_select')
 
 
 @app.route('/<int:WorkerId>/machine_select', methods=['GET', 'POST'])
@@ -157,15 +157,10 @@ def AddGloves(WorkerId, Machine):
         Sort=request.form['Sort']
         GloveCount=request.form['CountInput']
         if WorkerId in UsersFlows and Machine in UsersFlows[WorkerId]['GlovesCount']:
-            if UsersFlows[WorkerId]['Stage']  in ["В'язання", "Оверлок"]:
-                OpenDB()
-                DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
-                Product = DBCursor.fetchone()[0]
-                CloseDB()
-            else:
-                OpenDB()
-                DBCursor.execute(f"""SELECT Product FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
-                Product = DBCursor.fetchone()[0]
+            OpenDB()
+            DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
+            Product = DBCursor.fetchone()[0]
+            CloseDB()
             SaveInfoToDB(WorkerId, Sort, GloveCount, Machine, Product)
             return redirect(f'/{WorkerId}/shift')
         elif WorkerId in UsersFlows and Machine not in UsersFlows[WorkerId]['GlovesCount']:
@@ -177,32 +172,19 @@ def AddGloves(WorkerId, Machine):
         if Machine not in UsersFlows[WorkerId]['GlovesCount']:
             UsersFlows[WorkerId]['GlovesCount'][Machine] = {'FirstSort': 0, 'SecondSort':0, 'DefectSort':0}
 
-        if UsersFlows[WorkerId]['Stage'] not in ["В'язання", "Оверлок"]:
-            OpenDB()
-            DBCursor.execute(f"""SELECT Product FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
-            Product = DBCursor.fetchone()
-            if Product == None: 
-                return redirect(f'/{WorkerId}/shift')
-            else: 
-                Product = Product[0]
-                DBCursor.execute(f"""SELECT ShortName FROM products WHERE FullName='{Product}'""")
-                Product = DBCursor.fetchone()[0]
-            CloseDB()
-            ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}, {Product})"
-        else:
-            OpenDB()
-            DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
-            Product = DBCursor.fetchone()
-            if Product == None: 
-                return redirect(f'/{WorkerId}/shift')
-            else: 
-                Product = Product[0]
-                DBCursor.execute(f"""SELECT ShortName FROM products WHERE FullName='{Product}'""")
-                Product = DBCursor.fetchone()[0]
-            CloseDB()
-            ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}, {Machine} машина, {Product})"
+        OpenDB()
+        DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
+        Product = DBCursor.fetchone()
+        if Product == None: 
+            return redirect(f'/{WorkerId}/shift')
+        else: 
+            Product = Product[0]
+            DBCursor.execute(f"""SELECT ShortName FROM products WHERE FullName='{Product}'""")
+            Product = DBCursor.fetchone()[0]
+        CloseDB()
+        ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}, {Machine} машина, {Product})"
 
-        return render_template('AddGloves.html', BackUrl=f'/{WorkerId}/shift', ShiftName=ShiftName, FirstSortGloveCount=UsersFlows[WorkerId]['GlovesCount'][Machine]['FirstSort'], SecondSortGloveCount=UsersFlows[WorkerId]['GlovesCount'][Machine]['SecondSort'], DefectSortGloveCount=UsersFlows[WorkerId]['GlovesCount'][Machine]['DefectSort'])
+        return render_template('AddGloves.html', BackUrl=f'/{WorkerId}/machine_select', ShiftName=ShiftName, FirstSortGloveCount=UsersFlows[WorkerId]['GlovesCount'][Machine]['FirstSort'], SecondSortGloveCount=UsersFlows[WorkerId]['GlovesCount'][Machine]['SecondSort'], DefectSortGloveCount=UsersFlows[WorkerId]['GlovesCount'][Machine]['DefectSort'])
 
 if __name__ == '__main__':
     app.run(debug=True)
