@@ -1,0 +1,67 @@
+* {
+    margin:0;
+    font-family: Arial;
+}
+
+.TitleBox{
+    margin-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.Title{
+    font-size: 35px;
+    font-weight: bold;
+    color: #375f9b;
+    display:inline-block;
+}
+
+.BackButton{
+    width:50px;
+    height: 50px;
+    background-color: #d3dae2;
+    color: #375f9b;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:none;
+    cursor: pointer;
+}
+  
+.BackButton:hover {
+    background-color: #bccbdb;
+}
+
+.PasswordContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+
+.WorkerPassword{
+    border: 1px solid #375f9b;
+    width:300px;
+    height:46px;
+    border-radius: 15px;
+    color: #375f9b;
+    padding-left:10px;
+    font-size: 16px;
+}
+
+.LogInButton{
+    font-size: 14px;
+    color: #375f9b;
+    padding: 15px 40px;
+    border-radius: 45px;
+    background-color: #d3dae2;
+    border: none;
+    cursor: pointer;
+}
+  
+.LogInButton:hover {
+    background-color: #bccbdb;
+}

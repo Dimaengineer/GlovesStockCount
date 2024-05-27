@@ -1,0 +1,75 @@
+* {
+    margin:0;
+    font-family: Arial;
+}
+
+.Title{
+    font-size: 3vw;
+    font-weight: bold;
+    color: #375f9b;
+    text-align: center;
+}
+
+.Back {
+    text-decoration: none;
+}
+
+.Machines{
+    margin-top: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+.Machine{
+    font-size: 18px;
+    color: #375f9b;
+    width:90px;
+    height: 90px;
+    border-radius: 100px;
+    border: 3px solid #bccbdb;
+    background-color: #d3dae2;
+    border: none;
+    cursor: pointer;
+}
+  
+.Worker:hover {
+    background-color: #bccbdb;
+}
+
+.TimerContainer{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.Timer{
+    border: 1px solid gray;
+    border-radius: 10px;
+    color: #375f9b;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.StopShiftContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.StopShiftButton{
+    margin-top: 30px;
+    font-size: 14px;
+    color: #375f9b;
+    padding: 15px 40px;
+    border-radius: 45px;
+    background-color: #d3dae2;
+    border: none;
+    cursor: pointer;
+}
+  
+.StopShiftButton:hover {
+    background-color: #bccbdb;
+}

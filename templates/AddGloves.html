@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/AddGloves.css') }}">
+    <title>Підрахунок запасів рукавичок</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='favicon.ico') }}">
+</head>
+<body>
+    <form action="{{BackUrl}}">
+        <div class="TitleBox"><a class="Back" href="{{BackUrl}}"><button class="BackButton">&#8249;</button></a><p class="Title">{{ShiftName}}</p></div>
+    </form>
+    <form method="post">
+        <div class="GlovesCount">
+            <div class="FirstSortGlovesCount">{{FirstSortGloveCount}} шт (1 сорта)</div>
+            <div class="SecondSortGlovesCount">{{SecondSortGloveCount}} шт (2 сорта)</div>
+            <div class="ThirdSortGlovesCount">{{DefectSortGloveCount}} шт (брака)</div>
+        </div>
+        <div class="GlovesSet">
+            <div class="GlovesSort">
+                <button type="button" class="SortButton" id="FirstSortButton" onclick="ChangeSort(1);">1 сорт</button>
+                <button type="button" class="SortButton" id="SecondSortButton" onclick="ChangeSort(2);">2 сорт</button>
+                <button type="button" class="SortButton" id="ThirdSortButton" onclick="ChangeSort(3);">Брак</button>
+            </div>
+            <div class="GlovesCountEntry">
+                <input type="hidden" name="Sort" id="Sort" value="1">
+                <input type="hidden" name="CountInput" id="CountInputHidden" value="">
+                <input type="text" class="CountEntry" id="CountInput" value="" disabled>
+                <button type="submit" class="SubmitGlovesCount" id="SubmitGlovesCount">Зберегти</button>
+            </div>
+        </div>
+        <div class="MainNumbers">
+            <button type="button" class="MainNumber" onclick="AddNumber('Main6');">6</button>
+            <button type="button" class="MainNumber" onclick="AddNumber('Main12');">12</button>
+            <button type="button" class="MainNumber" onclick="AddNumber('Main24');">24</button>
+        </div>
+        <div class="Numbers">
+            <button type="button" class="Number" onclick="AddNumber('0');">0</button>
+            <button type="button" class="Number" onclick="AddNumber('1');">1</button>
+            <button type="button" class="Number" onclick="AddNumber('2');">2</button>
+            <button type="button" class="Number" onclick="AddNumber('3');">3</button>
+            <button type="button" class="Number" onclick="AddNumber('4');">4</button>
+            <button type="button" class="Number" onclick="AddNumber('5');">5</button>
+            <button type="button" class="Number" onclick="AddNumber('6');">6</button>
+            <button type="button" class="Number" onclick="AddNumber('7');">7</button>
+            <button type="button" class="Number" onclick="AddNumber('8');">8</button>
+            <button type="button" class="Number" onclick="AddNumber('9');">9</button>
+            <button type="button" class="BackNumber" onclick="AddNumber('<');">&lt;</button>
+        </div>
+        <input type="hidden" name="Stop" id="Stop" value="0">
+    </form>
+    <script>
+        document.getElementById("FirstSortButton").disabled = true;
+        document.getElementById("SubmitGlovesCount").disabled = true;
+        function ChangeSort(SortId) {
+            document.getElementById("Sort").value=SortId;
+            if (SortId == 1){
+                document.getElementById("FirstSortButton").disabled = true;
+                document.getElementById("SecondSortButton").disabled = false;
+                document.getElementById("ThirdSortButton").disabled = false;
+            }
+            else if (SortId == 2){
+                document.getElementById("FirstSortButton").disabled = false;
+                document.getElementById("SecondSortButton").disabled = true;
+                document.getElementById("ThirdSortButton").disabled = false;
+            }
+            else if (SortId == 3){
+                document.getElementById("FirstSortButton").disabled = false;
+                document.getElementById("SecondSortButton").disabled = false;
+                document.getElementById("ThirdSortButton").disabled = true;
+            }
+        };
+
+
+        function AddNumber(Number) {
+            GloveCount=document.getElementById("CountInput").value;
+            if (Number=='<' && GloveCount!=''){
+                document.getElementById("CountInput").value=GloveCount.slice(0, -1);
+            }
+            else if (Number.includes('Main')){
+                document.getElementById("CountInput").value=Number.replace('Main', '');
+            }
+            else if (GloveCount=='0'){
+                document.getElementById("CountInput").value=Number;
+            }
+            else if (Number!='<'){
+                document.getElementById("CountInput").value=GloveCount+Number;
+            }
+
+            if (document.getElementById("CountInput").value=='') {
+                document.getElementById("SubmitGlovesCount").disabled = true;
+            }
+            else{
+                document.getElementById("SubmitGlovesCount").disabled = false;
+            }
+            document.getElementById("CountInputHidden").value=document.getElementById("CountInput").value;
+        }
+    </script>
+</body>
+</html>
