@@ -157,7 +157,7 @@ def MachineSelect(WorkerId):
         OpenDB()
         DBCursor.execute(f"""SELECT Machine FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=1""")
 
-        Machines=sorted(list(set([Machine[0] for Machine in DBCursor.fetchall()])))
+        Machines=list(map(str, sorted(set(map(lambda Machine: int(Machine[0]), DBCursor.fetchall())))))
         CloseDB()
 
         return render_template('MachineSelect.html', Machines=Machines, BackUrl=f'/{WorkerId}/shift', ShiftName=f"{UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}", ShiftStart=UsersFlows[WorkerId]['ShiftStart'])
