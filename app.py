@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from datetime import datetime
 import mysql.connector
 import pytz
@@ -73,7 +73,9 @@ def WorkerSelect():
         CloseDB()
         return render_template('WorkerSelect.html', Workers=Workers)
     
-
+@app.route('/admin', methods=['GET', 'POST'])
+def Admin():
+    return str(UsersFlows)
 
 @app.route('/<string:Worker>/stage_select', methods=['GET', 'POST'])
 def StageSelect(Worker):
@@ -120,6 +122,15 @@ def Shift(WorkerId):
             UsersFlows[WorkerId]['ShiftStart']=datetime.now(pytz.timezone('Europe/Kiev')).strftime("%d.%m.%Y %H:%M")
             UsersFlows[WorkerId]['GlovesCount'] = {}
 
+            OpenDB()
+            DBCursor.execute(f"SELECT MAX(Id) FROM workers_shifts")
+            Id=DBCursor.fetchone()[0]
+            Id=Id+1 if Id != None else 0
+            UsersFlows[WorkerId]['ShiftId']=Id
+            DBCursor.execute(f"""INSERT INTO workers_shifts VALUES ({Id}, {WorkerId}, '{UsersFlows[WorkerId]['ShiftStart']}', '?', '?' )""")
+            DBConnector.commit()
+            CloseDB()
+
         return redirect(f'/{WorkerId}/machine_select')
     else:
         return render_template('Shift.html', AddGlovesUrl=f'/{WorkerId}/machine_select', ShiftName=f"{UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}")
@@ -142,10 +153,7 @@ def MachineSelect(WorkerId):
             Minutes = int(Minutes % 60)
             ShiftsTime = f"{Hours} {'годин' if Hours != 1 else 'година'} {Minutes} {'хвилин' if Minutes != 1 else 'хвилина'}"
 
-            DBCursor.execute(f"SELECT MAX(Id) FROM workers_shifts")
-            Id=DBCursor.fetchone()[0]
-            Id=Id+1 if Id != None else 0
-            DBCursor.execute(f"""INSERT INTO workers_shifts VALUES ({Id}, {WorkerId}, '{UsersFlows[WorkerId]['ShiftStart']}', '{str(datetime.now(pytz.timezone('Europe/Kiev')).strftime("%d.%m.%Y %H:%M"))}', '{ShiftsTime}' )""")
+            DBCursor.execute(f"""UPDATE workers_shifts SET ShiftEnd='{str(datetime.now(pytz.timezone('Europe/Kiev')).strftime("%d.%m.%Y %H:%M"))}', ShiftTime='{ShiftsTime}' WHERE Id = {UsersFlows[WorkerId]['ShiftId']}""")
             DBConnector.commit()
             CloseDB()
             UsersFlows[WorkerId]={'Stage':UsersFlows[WorkerId]['Stage'], 'Worker':UsersFlows[WorkerId]['Worker'], '':UsersFlows[WorkerId]}
@@ -158,6 +166,7 @@ def MachineSelect(WorkerId):
         DBCursor.execute(f"""SELECT Machine FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=1""")
 
         Machines=list(map(str, sorted(set(map(lambda Machine: int(Machine[0]), DBCursor.fetchall())))))
+
         CloseDB()
 
         return render_template('MachineSelect.html', Machines=Machines, BackUrl=f'/{WorkerId}/shift', ShiftName=f"{UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}", ShiftStart=UsersFlows[WorkerId]['ShiftStart'])
