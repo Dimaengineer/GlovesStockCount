@@ -5,7 +5,7 @@ import pytz
 
 app = Flask(__name__)
 
-UsersFlows = {6: {'Worker': 'Вʼячислав', 'Stage': "В'язання", 'ShiftStart': '07.06.2024 09:21', 'GlovesCount': {1: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 30}, 4: {'Worker': 'Полякова Наталія', 'Stage': 'ПВХ', 'ShiftStart': '07.06.2024 09:22', 'GlovesCount': {(1, 17): {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 30, 'AddedComingProduct': '10кл 17гр Біла', 'ComingProductId': 1}, 2: {'Worker': 'Карловська Вікторія', 'Stage': "В'язання", 'ShiftStart': '07.06.2024 09:22', 'GlovesCount': {1: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}, 14: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 31}}
+UsersFlows = {6: {'Worker': 'Вʼячислав', 'Stage': "В'язання", 'ShiftStart': '07.06.2024 09:21', 'GlovesCount': {1: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 30}, 4: {'Worker': 'Полякова Наталія', 'Stage': 'ПВХ', 'ShiftStart': '07.06.2024 09:22', 'GlovesCount': {(1, 17): {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 30, 'AddedComingProduct': '10кл 27гр Біла', 'ComingProductId': 8}, 2: {'Worker': 'Карловська Вікторія', 'Stage': "В'язання", 'ShiftStart': '07.06.2024 09:22', 'GlovesCount': {1: {'FirstSort': 72, 'SecondSort': 0, 'DefectSort': 0}, 14: {'FirstSort': 48, 'SecondSort': 0, 'DefectSort': 2}, 4: {'FirstSort': 120, 'SecondSort': 0, 'DefectSort': 0}, 5: {'FirstSort': 96, 'SecondSort': 0, 'DefectSort': 0}, 12: {'FirstSort': 72, 'SecondSort': 0, 'DefectSort': 0}, 2: {'FirstSort': 96, 'SecondSort': 0, 'DefectSort': 0}, 13: {'FirstSort': 96, 'SecondSort': 0, 'DefectSort': 0}, 15: {'FirstSort': 72, 'SecondSort': 0, 'DefectSort': 0}, 11: {'FirstSort': 48, 'SecondSort': 0, 'DefectSort': 0}, 3: {'FirstSort': 72, 'SecondSort': 0, 'DefectSort': 0}, 6: {'FirstSort': 96, 'SecondSort': 0, 'DefectSort': 0}, 8: {'FirstSort': 24, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 31}, 7: {'Worker': 'Ілона', 'Stage': 'Оверлок', 'ShiftStart': '07.06.2024 16:03', 'GlovesCount': {(19, 47): {'FirstSort': 507, 'SecondSort': 0, 'DefectSort': 0}, (21, 48): {'FirstSort': 400, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 32, 'AddedComingProduct': 'ПВХ 5F 20гр Біла', 'ComingProductId': 19}}
 
 def OpenDB():
     global DBConnector, DBCursor
@@ -459,7 +459,7 @@ def ComingProductCountSet(WorkerId):
         ComingProductCount=int(request.form['products_count_input'])
         OpenDB()
 
-        DBCursor.execute(f"""SELECT Product, Stage FROM comings""")
+        DBCursor.execute(f"""SELECT Product, Stage FROM comings WHERE TimeEnd='?'""")
         Comings=list(map(lambda Element: (Element[0], Element[1]), DBCursor.fetchall()))
 
         if (UsersFlows[WorkerId]["AddedComingProduct"], UsersFlows[WorkerId]['Stage'].replace("'", "''")) not in Comings:
