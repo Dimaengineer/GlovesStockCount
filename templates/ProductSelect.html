@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/ProductSelect.css') }}">
+    <title>Підрахунок запасів рукавичок</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='favicon.ico') }}">
+</head>
+<body>
+    <form action="{{BackUrl}}">
+        <div class="TitleBox"><button class="BackButton">&#8249;</button><p class="Title">Вибір продукту ({{ShiftName}})</p></div>
+    </form>
+    <form method="post">
+        <div class="Products">
+            {% for Product in Products %}
+            <input type="submit" class="Product" name="Product" value="{{Product}}">
+            {% endfor %}
+        </div>
+    </form>
+</body>
+</html>
