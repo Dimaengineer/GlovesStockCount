@@ -219,7 +219,7 @@ def MachineSelect(WorkerId):
             return redirect(f'/')
         
         OpenDB()
-        DBCursor.execute(f"""SELECT Machine FROM plans WHERE Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=1""")
+        DBCursor.execute(f"""SELECT Machine FROM products_for_machines WHERE AND Exist=1""")
 
         Machines=list(map(str, sorted(set(map(lambda Machine: int(Machine[0]), DBCursor.fetchall())))))
 
@@ -236,7 +236,7 @@ def AddGloves(WorkerId, Machine):
         GloveCount=request.form['CountInput']
         if WorkerId in UsersFlows and Machine in UsersFlows[WorkerId]['GlovesCount']:
             OpenDB()
-            DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
+            DBCursor.execute(f"""SELECT Product FROM products_for_machines WHERE Machine='{Machine}' AND Exist=1""")
             Product = DBCursor.fetchone()[0]
             CloseDB()
             SaveInfoToDBMachine(WorkerId, Sort, GloveCount, Machine, Product)
@@ -254,7 +254,7 @@ def AddGloves(WorkerId, Machine):
             UsersFlows[WorkerId]['GlovesCount'][Machine] = {'FirstSort': 0, 'SecondSort':0, 'DefectSort':0}
 
         OpenDB()
-        DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
+        DBCursor.execute(f"""SELECT Product FROM products_for_machines WHERE Machine='{Machine}' AND Exist=1""")
         Product = DBCursor.fetchone()
         if Product == None: 
             return redirect(f'/{WorkerId}/machine_select')
@@ -279,7 +279,7 @@ def ShowProductsMachine(WorkerId):
     CountdownInfo=[]
     for Machine, ProductCount in UsersFlows[WorkerId]['GlovesCount'].items():
         OpenDB()
-        DBCursor.execute(f"""SELECT Product FROM plans WHERE Machine='{Machine}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND Exist=True""")
+        DBCursor.execute(f"""SELECT Product FROM products_for_machines WHERE Machine='{Machine}' AND Exist=1""")
         ProductName = DBCursor.fetchone()[0]
         CloseDB()
         for Sort, Count in ProductCount.items():
