@@ -5,7 +5,7 @@ import pytz
 
 app = Flask(__name__)
 
-UsersFlows = {}
+UsersFlows = {6: {'Worker': 'Вʼячислав', 'Stage': "В'язання", 'ShiftStart': '07.06.2024 09:21', 'GlovesCount': {1: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 30}, 4: {'Worker': 'Полякова Наталія', 'Stage': 'ПВХ', 'ShiftStart': '07.06.2024 09:22', 'GlovesCount': {(1, 17): {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 30, 'AddedComingProduct': '10кл 17гр Біла', 'ComingProductId': 1}, 2: {'Worker': 'Карловська Вікторія', 'Stage': "В'язання", 'ShiftStart': '07.06.2024 09:22', 'GlovesCount': {1: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}, 14: {'FirstSort': 0, 'SecondSort': 0, 'DefectSort': 0}}, 'ShiftId': 31}}
 
 def OpenDB():
     global DBConnector, DBCursor
