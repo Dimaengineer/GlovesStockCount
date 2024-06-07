@@ -219,7 +219,7 @@ def MachineSelect(WorkerId):
             return redirect(f'/')
         
         OpenDB()
-        DBCursor.execute(f"""SELECT Machine FROM products_for_machines WHERE AND Exist=1""")
+        DBCursor.execute(f"""SELECT Machine FROM products_for_machines WHERE Exist=1""")
 
         Machines=list(map(str, sorted(set(map(lambda Machine: int(Machine[0]), DBCursor.fetchall())))))
 
