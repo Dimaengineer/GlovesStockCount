@@ -395,7 +395,7 @@ def AddGlovesInProduct(WorkerId, ComingProductId, ProductId):
         DBCursor.execute(f"""SELECT ShortName FROM products WHERE Id={ProductId}""")
         ProductName = DBCursor.fetchone()[0]
 
-        DBCursor.execute(f"""SELECT Pair FROM comings WHERE Product='{ComingProductName}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}'""")
+        DBCursor.execute(f"""SELECT Pair FROM comings WHERE Product='{ComingProductName}' AND Stage='{UsersFlows[WorkerId]['Stage'].replace("'", "''")}' AND TimeEnd='?'""")
         ComingProductCounts = DBCursor.fetchone()[0]
         CloseDB()
         ShiftName=f"Зміна ({UsersFlows[WorkerId]['Worker']}, {UsersFlows[WorkerId]['Stage']}, Прихід {ComingProductName}, {ProductName})"
