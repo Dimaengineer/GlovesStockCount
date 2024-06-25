@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/ProductSelectTemporametly.css') }}">
+    <title>Підрахунок запасів рукавичок</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='favicon.ico') }}">
+</head>
+<body>
+    <p class="Title">Вибір продукту ({{ShiftName}})</p>
+    <div class="TimerContainer"><div class="Timer">Початок {{ShiftStart}}</div></div>
+    <form method="post">
+        <div class="Products">
+            {% for Product in Products %}
+            <input type="submit" class="Product" name="Product" value="{{Product}}">
+            {% endfor %}
+        </div>
+        <div class="CenterContainer"><a href="{{WorkerId}}show_products_product/"><button type="button" class="AddComingButton">Звіт товарів</button></a></div>
+        <div class="CenterContainer"><a href="{{WorkerId}}pause_shift/"><button type="button" class="StopShiftButton">Зміну на паузу</button></a></div>
+        <input type="hidden" name="StopShift" id="StopShift" value="0">
+        <div class="StopShiftContainer"><button type="submit" class="StopShiftButton" onclick="document.getElementById('StopShift').value='1';">Закінчити зміну</button></div>
+    </form>
+</body>
+</html>

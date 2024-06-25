@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/PauseShift.css') }}">
+    <title>Підрахунок запасів рукавичок</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='favicon.ico') }}">
+</head>
+<body>
+    <p class="Title">Вибір продукту з приходу ({{ShiftName}})</p>
+    <div class="TimerContainer"><div class="Timer">Початок зміни {{ShiftStart}}</div></div>
+    <div class="TimerContainer"><div class="Timer">Початок паузи {{ShiftStartPause}}</div></div>
+    <form method="post">
+        <div class="ContinueShiftContainer"><button type="submit" class="ContinueShiftButton">Продовжити зміну</button></div>
+    </form>
+</body>
+</html>
